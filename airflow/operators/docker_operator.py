@@ -256,7 +256,16 @@ class DockerOperator(BaseOperator):
 
     def __get_tls_config(self):
         tls_config = None
+        self.log.info('getting tls config')
+        self.log.info('Docker tls_ca_cert  %s', self.tls_ca_cert)
+        self.log.info('Docker tls_client_cert  %s', self.tls_client_cert)
+        self.log.info('Docker tls_client_key  %s', self.tls_client_key)
         if self.tls_ca_cert and self.tls_client_cert and self.tls_client_key:
+            self.log.info('Docker tls_ca_cert found  %s', self.tls_ca_cert)
+            self.log.info('Docker tls_client_cert found  %s',
+                          self.tls_client_cert)
+            self.log.info('Docker tls_client_key found  %s',
+                          self.tls_client_key)
             tls_config = tls.TLSConfig(
                 ca_cert=self.tls_ca_cert,
                 client_cert=(self.tls_client_cert, self.tls_client_key),
@@ -264,5 +273,7 @@ class DockerOperator(BaseOperator):
                 ssl_version=self.tls_ssl_version,
                 assert_hostname=self.tls_hostname
             )
+            self.log.info(tls_config)
             self.docker_url = self.docker_url.replace('tcp://', 'https://')
+            self.log.info(self.docker_url)
         return tls_config
